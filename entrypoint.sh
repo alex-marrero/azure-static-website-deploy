@@ -40,6 +40,11 @@ if [ -z "$CDN_NAME" ]; then
   exit 1
 fi
 
+if [ -z "$RG_NAME" ]; then
+  echo "RG_NAME is not set. Quitting."
+  exit 1
+fi
+
 if [ -z "$SOURCE_DIR" ]; then
   echo "SOURCE_DIR is not set. Quitting."
   exit 1 
@@ -62,4 +67,4 @@ fi
 az storage blob upload-batch -s ${SOURCE_DIR} -d \$web --account-name ${AZURE_STORAGE_ACCOUNT_NAME}
 
 #Purge Azure CDN
-az cdn endpoint purge --profile-name ${CDN_PROFILE_NAME} --name ${CDN_NAME} --content-paths "/*"
+az cdn endpoint purge --profile-name ${CDN_PROFILE_NAME} --name ${CDN_NAME} --resource-group ${RG_NAME} --content-paths "/*"
