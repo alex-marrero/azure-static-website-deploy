@@ -30,9 +30,19 @@ if [ -z "$AZURE_INDEX_DOCUMENT_NAME" ]; then
   exit 1
 fi
 
+if [ -z "$CDN_PROFILE_NAME" ]; then
+  echo "CDN_PROFILE_NAME is not set. Quitting."
+  exit 1
+fi
+
+if [ -z "$CDN_NAME" ]; then
+  echo "CDN_NAME is not set. Quitting."
+  exit 1
+fi
+
 if [ -z "$SOURCE_DIR" ]; then
   echo "SOURCE_DIR is not set. Quitting."
-  exit 1
+  exit 1 
 fi
 
 # Login
@@ -50,3 +60,6 @@ fi
 
 # Upload source to storage
 az storage blob upload-batch -s ${SOURCE_DIR} -d \$web --account-name ${AZURE_STORAGE_ACCOUNT_NAME}
+
+#Purge Azure CDN
+az cdn endpoint purge --profile-name ${CDN_PROFILE_NAME} --name ${CDN_NAME} --content-paths "/*"
